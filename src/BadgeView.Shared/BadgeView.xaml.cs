@@ -9,7 +9,9 @@ namespace BadgeView.Shared
         public static BindableProperty TextProperty = BindableProperty.Create("Text", typeof(string), typeof(BadgeView), "0", propertyChanged: (bindable, oldVal, newVal) =>
         {
             var view = (BadgeView)bindable;
-            view.BadgeLabel.Text = (string)newVal;
+            var value = (string)newVal;
+            view.BadgeLabel.Text = value;
+            view.UpdateVisible(value);
         });
 
         public static BindableProperty TextColorProperty = BindableProperty.Create("TextColor", typeof(Color), typeof(BadgeView), Color.White, propertyChanged: (bindable, oldVal, newVal) =>
@@ -78,10 +80,17 @@ namespace BadgeView.Shared
             }
         }
 
+        public void UpdateVisible(string value)
+        {
+            if (string.IsNullOrEmpty(value) || "0".Equals(value)) IsVisible = false;
+            else IsVisible = true;
+        }
+
         public BadgeView()
         {
             InitializeComponent();
             BadgeLabel.Text = Text;
+            UpdateVisible(Text);
             BadgeLabel.TextColor = TextColor;
             BadgeLabel.FontFamily = FontFamily;
             BadgeCircle.BackgroundColor = BadgeColor;
